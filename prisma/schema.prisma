@@ -11,3 +11,34 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum TariffType {
+  UNLIMITED
+  FIXED
+}
+
+model Tariff {
+  id        Int        @id @default(autoincrement())
+  country   Country    @relation(fields: [countryId], references: [id])
+  countryId Int
+  price     Int
+  type      TariffType
+}
+
+model Country {
+  id      Int      @id @default(autoincrement())
+  name    String
+  tariffs Tariff[]
+  icon    String?
+
+  reviews Review[]
+}
+
+model Review {
+  id        Int     @id @default(autoincrement())
+  fullName  String
+  text      String
+  rating    Int
+  country   Country @relation(fields: [countryId], references: [id])
+  countryId Int
+}
